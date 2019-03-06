@@ -34,6 +34,8 @@ var render = function(parsed) {
     $("#html").text(htmlwriter.render(parsed));
     $("#ast").text(xmlwriter.render(parsed));
     $("#rendertime").text(renderTime);
+    var asstr = parsed.asstring();
+    $('#tree').empty().append($('<div>'+asstr+'</div>'));
 };
 
 var syncScroll = function() {
