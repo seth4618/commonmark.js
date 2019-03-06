@@ -1,4 +1,5 @@
-(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.commonmark = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+/* commonmark 0.28 https://github.com/CommonMark/commonmark.js @license BSD3 */
+(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.commonmark = f()}})(function(){var define,module,exports;return (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 "use strict";
 
 var Node = require('./node');
@@ -24,7 +25,7 @@ var reHtmlBlockOpen = [
    /^<[?]/,
    /^<![A-Z]/,
    /^<!\[CDATA\[/,
-   /^<[/]?(?:address|article|aside|base|basefont|blockquote|body|caption|center|col|colgroup|dd|details|dialog|dir|div|dl|dt|fieldset|figcaption|figure|footer|form|frame|frameset|h[123456]|head|header|hr|html|iframe|legend|li|link|main|menu|menuitem|meta|nav|noframes|ol|optgroup|option|p|param|section|source|title|summary|table|tbody|td|tfoot|th|thead|title|tr|track|ul)(?:\s|[/]?[>]|$)/i,
+   /^<[/]?(?:address|article|aside|base|basefont|blockquote|body|caption|center|col|colgroup|dd|details|dialog|dir|div|dl|dt|fieldset|figcaption|figure|footer|form|frame|frameset|h[123456]|head|header|hr|html|iframe|legend|li|link|main|menu|menuitem|nav|noframes|ol|optgroup|option|p|param|section|source|title|summary|table|tbody|td|tfoot|th|thead|title|tr|track|ul)(?:\s|[/]?[>]|$)/i,
     new RegExp('^(?:' + OPENTAG + '|' + CLOSETAG + ')\\s*$', 'i')
 ];
 
@@ -49,7 +50,7 @@ var reOrderedListMarker = /^(\d{1,9})([.)])/;
 
 var reATXHeadingMarker = /^#{1,6}(?:[ \t]+|$)/;
 
-var reCodeFence = /^`{3,}(?!.*`)|^~{3,}(?!.*~)/;
+var reCodeFence = /^`{3,}(?!.*`)|^~{3,}/;
 
 var reClosingCodeFence = /^(?:`{3,}|~{3,})(?= *$)/;
 
@@ -138,6 +139,9 @@ var parseListMarker = function(parser, container) {
                  delimiter: null,
                  padding: null,
                  markerOffset: parser.indent };
+    if (parser.indent >= 4) {
+        return null;
+    }
     if ((match = rest.match(reBulletListMarker))) {
         data.type = 'bullet';
         data.bulletChar = match[0][0];
@@ -883,7 +887,7 @@ var C_BACKSLASH = 92;
 
 var decodeHTML = require('entities').decodeHTML;
 
-var ENTITY = "&(?:#x[a-f0-9]{1,8}|#[0-9]{1,8}|[a-z][a-z0-9]{1,31});";
+var ENTITY = "&(?:#x[a-f0-9]{1,6}|#[0-9]{1,7}|[a-z][a-z0-9]{1,31});";
 
 var TAGNAME = '[A-Za-z][A-Za-z0-9-]*';
 var ATTRIBUTENAME = '[a-zA-Z_:][a-zA-Z0-9:._-]*';
@@ -1107,7 +1111,7 @@ var reLinkTitle = new RegExp(
         '\\((' + ESCAPED_CHAR + '|[^)\\x00])*\\))');
 
 var reLinkDestinationBraces = new RegExp(
-    '^(?:[<](?:[^ <>\\t\\n\\\\\\x00]' + '|' + ESCAPED_CHAR + '|' + '\\\\)*[>])');
+    '^(?:[<](?:[^<>\\n\\\\\\x00]' + '|' + ESCAPED_CHAR + '|' + '\\\\)*[>])');
 
 var reEscapable = new RegExp('^' + ESCAPABLE);
 
@@ -1199,12 +1203,19 @@ var parseBackticks = function(block) {
     var afterOpenTicks = this.pos;
     var matched;
     var node;
+    var contents;
     while ((matched = this.match(reTicks)) !== null) {
         if (matched === ticks) {
             node = new Node('code');
-            node._literal = this.subject.slice(afterOpenTicks,
+            contents = this.subject.slice(afterOpenTicks,
                                         this.pos - ticks.length)
-                          .trim().replace(reWhitespace, ' ');
+                          .replace(/\n/gm, ' ');
+            if (contents.length > 0 && contents[0] == ' ' &&
+                contents[contents.length - 1] == ' ') {
+                node._literal = contents.slice(1, contents.length - 1);
+            } else {
+                node._literal = contents;
+            }
             block.appendChild(node);
             return true;
         }
@@ -1546,7 +1557,8 @@ var parseLinkDestination = function() {
         var openparens = 0;
         var c;
         while ((c = this.peek()) !== -1) {
-            if (c === C_BACKSLASH) {
+            if (c === C_BACKSLASH
+                && reEscapable.test(this.subject.charAt(this.pos + 1))) {
                 this.pos += 1;
                 if (this.peek() !== -1) {
                     this.pos += 1;
@@ -1861,7 +1873,9 @@ var parseReference = function(s, refmap) {
 
     var beforetitle = this.pos;
     this.spnl();
-    title = this.parseLinkTitle();
+    if (this.pos !== beforetitle) {
+        title = this.parseLinkTitle();
+    }
     if (title === null) {
         title = '';
         // rewind before spaces
@@ -2267,6 +2281,35 @@ Node.prototype.walker = function() {
     var walker = new NodeWalker(this);
     return walker;
 };
+
+Node.prototype.ashelper = function(depth, output) {
+    //console.log(depth, this.type);
+    //console.log(this);
+    var sp = this.sourcepos;
+    var lninfo = '&nbsp;&nbsp;&nbsp;';
+    if (typeof sp == 'object') {
+        lninfo = [ this.sourcepos[0][0], ':', this.sourcepos[0][1] ].join('');
+    } 
+    var line = [  "&nbsp;".repeat(depth), lninfo, ' ', this.type ];
+    if (this.type == 'text') {
+        line.push([' <span class="litr">', this.literal, '</span>']);
+    }
+    depth += 1;
+    output.push(line.join(''));
+    var n;
+    for (n = this.firstChild; n != null; n=n.next) {
+        n.ashelper(depth, output);
+    }
+};
+
+Node.prototype.asstring = function() {
+    var output = [];
+    var depth = 0;
+    this.ashelper(depth, output);
+    //console.log(output);
+    return output.join('<br>\n');
+};
+
 
 module.exports = Node;
 
