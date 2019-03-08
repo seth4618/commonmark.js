@@ -146,6 +146,7 @@ var pathologicalTest = function(testcase, res, converter) {
     console.timeEnd('  elapsed time');
 };
 
+console.time('Total time');
 specTests('test/spec.txt', results, function(z) {
         return writer.render(reader.parse(z));
     });
@@ -239,6 +240,7 @@ for (var j = 0; j < cases.length; j++) {
 }
 cursor.write('\n');
 
+console.timeEnd('Total time');
 cursor.write(results.passed.toString() + ' tests passed, ' +
              results.failed.toString() + ' failed.\n');
 
