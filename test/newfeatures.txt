@@ -1,0 +1,116 @@
+# Table of content nodes
+
+A {toc} at the start of a line will cause all header nodes to the
+proper depth to be inserted at the point of {toc}.  A {toc} is a leaf
+container.
+
+```````````````````````````````` example
+# level 1
+
+{toc}
+
+# level 1 (second)
+
+## level 2
+
+## level 2 (second)
+
+# level 1 (third)
+.
+<h1>level 1</h1>
+<div class="toc"><ol><li>level 1</li><li>level 1 (second)</li><ol><li>level 2</li><li>level 2 (second)</li></ol><li>level 1 (third)</li></div>
+<h1>level 1 (second)</h1>
+<h2>level 2</h2>
+<h2>level 2 (second)</h2>
+<h1>level 1 (third)</h1>
+````````````````````````````````
+
+If a depth is specified in the toc node, then the table of contents
+will have only `depth` levels.  A `depth` of 0 means there is no limit
+on the depth.
+
+```````````````````````````````` example
+# level 1
+
+{toc:0}
+
+# level 1 (second)
+
+## level 2
+
+## level 2 (second)
+
+# level 1 (third)
+.
+<h1>level 1</h1>
+<div class="toc"><ol><li>level 1</li><li>level 1 (second)</li><ol><li>level 2</li><li>level 2 (second)</li></ol><li>level 1 (third)</li></div>
+<h1>level 1 (second)</h1>
+<h2>level 2</h2>
+<h2>level 2 (second)</h2>
+<h1>level 1 (third)</h1>
+````````````````````````````````
+
+and, if we only want the top level:
+
+```````````````````````````````` example
+# level 1
+
+{toc:1}
+
+# level 1 (second)
+
+## level 2
+
+## level 2 (second)
+
+# level 1 (third)
+.
+<h1>level 1</h1>
+<div class="toc"><ol><li>level 1</li><li>level 1 (second)</li><li>level 1 (third)</li></div>
+<h1>level 1 (second)</h1>
+<h2>level 2</h2>
+<h2>level 2 (second)</h2>
+<h1>level 1 (third)</h1>
+````````````````````````````````
+
+A toc node must be in the first column, so
+
+```````````````````````````````` example
+# level 1
+
+ {toc} is not a table of contents.  Neither is {toc}.
+
+A {toc} does not interrupt a list, codeblock, etc.
+
+- {toc} is treated literally
+- and this iss second item of list.
+
+# level 1 (second)
+
+## level 2
+
+## level 2 (second)
+
+Here is an actual table of contents:
+
+{toc}
+
+# level 1 (third)
+.
+<h1>level 1</h1>
+<p>{toc} is not a table of contents.  Neither is {toc}.</p>
+<p>A {toc} does not interrupt a list, codeblock, etc.</p>
+<ul>
+<li>{toc} is treated literally</li>
+<li>and this iss second item of list.</li>
+</ul>
+<h1>level 1 (second)</h1>
+<h2>level 2</h2>
+<h2>level 2 (second)</h2>
+<p>Here is an actual table of contents:</p>
+<div class="toc"><ol><li>level 1</li><li>level 1 (second)</li><ol><li>level 2</li><li>level 2 (second)</li></ol><li>level 1 (third)</li></div>
+<h1>level 1 (third)</h1>
+````````````````````````````````
+
+That's it for table of content nodes.
+
