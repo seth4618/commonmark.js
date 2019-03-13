@@ -9,7 +9,7 @@ var parseArgs = require('minimist');
 var args = process.argv.slice(2);
 var argv = parseArgs(args,
   {boolean: ["ast", "xml", "time", "smart",
-             "safe", "sourcepos", "help", "version"],
+             "safe", "sourcepos", "help", "version", "tree"],
    string: ["to", "t"],
    unknown: function(o) {
      if (/^-/.test(o)) {
@@ -29,6 +29,7 @@ var usage = function() {
     "-t,--to FORMAT  Specify output format (xml, html, ast)\n" +
     "--time          Produce timings for phases of parsing and rendering\n" +
     "--smart         Parse 'smart' punctuation\n" +
+    "--tree         output parse tree\n" +
     "--safe          Omit raw HTML and potentially unsafe attributes\n" +
     "--sourcepos     Include source position attributes in HTML tags\n" +
     "--version       Print version information\n" +
@@ -49,10 +50,10 @@ var format = argv.to || argv.t || (argv.xml ? 'xml' :
                                       (argv.ast ? 'ast' : 'html'));
 
 var options = {
-  time: argv.time,
-  smart: argv.smart,
-  safe: argv.safe,
-  sourcepos: argv.sourcepos
+    time: argv.time,
+    smart: argv.smart,
+    safe: argv.safe,
+    sourcepos: argv.sourcepos
 };
 
 var files = argv._;
@@ -65,6 +66,11 @@ if (format === 'html') {
 } else if (format === 'xml') {
     renderer = new commonmark.XmlRenderer(options);
 } else if (format === 'ast') {
+    renderer = { render: function(node) {
+                   return util.inspect(node, null, 20, true) + '\n';
+                 },
+                 options: {} };
+} else if (format === 'tree') {
     renderer = { render: function(node) {
                    return util.inspect(node, null, 20, true) + '\n';
                  },
@@ -85,6 +91,11 @@ for (i = 0; i < files.length; i++) {
 
 var inp = inps.join('\n');
 var doc = parser.parse(inp);
+
+if (argv.tree) {
+    var tree = doc.asstring();
+    process.stdout.write(tree);
+}
 
 var rendered = renderer.render(doc);
 
