@@ -4,6 +4,21 @@
 var fs = require('fs');
 var commonmark = require('../lib/index.js');
 
+// track total time of test
+var totalTime = 0;
+var timers = {}
+var startTest = function(tag) {
+    timers[tag] = new Date();
+    console.time(tag);
+}
+var endTest = function(tag) {
+    console.timeEnd(tag);
+    var now = new Date();
+    totalTime += (now - timers[tag]);
+    delete timers[tag];
+}
+
+
 // Home made mini-version of the npm ansi module:
 var escSeq = function(s) {
     return function (){
@@ -106,7 +121,7 @@ var specTests = function(testfile, res, converter) {
     var current_section = "";
     var examples = extractSpecTests(testfile);
 
-    console.time("Elapsed time");
+    startTest("Elapsed time");
     for (var i = 0; i < examples.length; i++) {
         var testcase = examples[i];
         if (testcase.section !== current_section) {
@@ -119,13 +134,13 @@ var specTests = function(testfile, res, converter) {
         specTest(testcase, results, converter);
     }
     cursor.write('\n');
-    console.timeEnd("Elapsed time");
+    endTest("Elapsed time");
     cursor.write('\n');
 };
 
 var pathologicalTest = function(testcase, res, converter) {
     cursor.write(testcase.name + ' ');
-    console.time('  elapsed time');
+    startTest('  elapsed time');
     var actual = converter(testcase.input);
     if (actual === testcase.expected) {
         cursor.green().write('✓\n').reset();
@@ -143,10 +158,9 @@ var pathologicalTest = function(testcase, res, converter) {
         cursor.reset();
         res.failed += 1;
     }
-    console.timeEnd('  elapsed time');
+    endTest('  elapsed time');
 };
 
-console.time('Total time');
 specTests('test/spec.txt', results, function(z) {
         return writer.render(reader.parse(z));
     });
@@ -240,8 +254,8 @@ for (var j = 0; j < cases.length; j++) {
 }
 cursor.write('\n');
 
-console.timeEnd('Total time');
 cursor.write(results.passed.toString() + ' tests passed, ' +
              results.failed.toString() + ' failed.\n');
+console.log("Total time: "+totalTime+"ms");
 
 process.exit(results.failed);
