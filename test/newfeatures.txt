@@ -265,6 +265,18 @@ This loosens syntax of autolink's to include those which start with
 links.
 
 
+## Including other files
+
+This is not done yet, but the idea is to include other files either by path or url. `<<path>>` would include `path` into the spot it is.  This is a block element.
+
+## tables
+
+## exam questions
+
+## attributes, e.g., CSS
+
+Including `{:attr:}` will include attr on the closest inline element to the left.  If there is no inline element to the left, then on the enclosing block.  Finally, if it is at the start of a line, then the immediatly following block.
+
 # template for an example which will be tested.
 
 ```````````````````````````````` example
