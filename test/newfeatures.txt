@@ -252,6 +252,19 @@ A smaller test case for question nodes in lists.
 </ul>
 ````````````````````````````````
 
+## Local Names for links within a document
+
+```````````````````````````````` example
+We can create local anchors, e.g., {#start} and then link to them with either [an inner link](#start) or and autolink, e.g., <#start>.
+.
+<p>We can create local anchors, e.g., <span id="start" /> and then link to them with either <a href="#start">an inner link</a> or and autolink, e.g., <a href="#start">start</a>.</p>
+````````````````````````````````
+
+This loosens syntax of autolink's to include those which start with
+`#`, so now there are three, emails, absolute URIs, and internal
+links.
+
+
 # template for an example which will be tested.
 
 ```````````````````````````````` example
