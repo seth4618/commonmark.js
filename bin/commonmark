@@ -6,9 +6,12 @@ var fs = require('fs');
 var commonmark = require('../lib/index.js');
 var version = require('../package.json').version;
 var parseArgs = require('minimist');
-var toc = require('../addons/toc.js');
-var question = require('../addons/question.js');
-var localAnchor = require('../addons/localanchor.js');
+const path = require('path');
+
+const toc = require('../addons/toc.js');
+const question = require('../addons/question.js');
+const localAnchor = require('../addons/localanchor.js');
+const include = require('../addons/include.js');
 
 // get arguments
 var args = process.argv.slice(2);
@@ -91,6 +94,7 @@ if (format === 'html') {
 toc(parser.addParserFunction('block'), htmlRenderer, xmlRenderer);
 question(parser.addParserFunction('inline'), htmlRenderer, xmlRenderer);
 localAnchor(parser.addParserFunction('inline'), htmlRenderer, xmlRenderer);
+include(parser.addParserFunction('block'), htmlRenderer, xmlRenderer);
 
 if (files.length === 0) {
   files = ['/dev/stdin'];
@@ -100,6 +104,9 @@ for (i = 0; i < files.length; i++) {
   var file = files[i];
   inps.push(fs.readFileSync(file, 'utf8'));
 }
+
+const basepath = (files.length == 1 ? files[0] : undefined);
+parser.setPath(path.resolve(path.dirname(basepath)));
 
 var inp = inps.join('\n');
 var doc = parser.parse(inp);
