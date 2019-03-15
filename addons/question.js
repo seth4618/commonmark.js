@@ -90,7 +90,6 @@ function questionHtmlInit() {
 }
 
 function questionXmlRenderer(node, attrs) {
-    console.log(this);
     const level = node.level;
     while (level >= this.questionNumbers.length) this.questionNumbers.push(0);
     this.questionNumbers[level]++;
