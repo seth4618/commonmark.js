@@ -6,6 +6,10 @@ var fs = require('fs');
 var commonmark = require('../lib/index.js');
 var version = require('../package.json').version;
 var parseArgs = require('minimist');
+var toc = require('../addons/toc.js');
+var question = require('../addons/question.js');
+
+// get arguments
 var args = process.argv.slice(2);
 var argv = parseArgs(args,
   {boolean: ["ast", "xml", "time", "smart",
@@ -60,11 +64,15 @@ var files = argv._;
 
 var parser = new commonmark.Parser(options);
 var renderer;
+var htmlRenderer = null;
+var xmlRenderer = null;
 
 if (format === 'html') {
     renderer = new commonmark.HtmlRenderer(options);
+    htmlRenderer = renderer;
 } else if (format === 'xml') {
     renderer = new commonmark.XmlRenderer(options);
+    xmlRenderer = renderer;
 } else if (format === 'ast') {
     renderer = { render: function(node) {
                    return util.inspect(node, null, 20, true) + '\n';
@@ -79,6 +87,8 @@ if (format === 'html') {
     process.stderr.write("Unknown format: " + format + "\n");
     process.exit(1);
 }
+toc(parser.addBlockParser.bind(parser), htmlRenderer, xmlRenderer);
+question(parser.inlineParser.addInlineParser.bind(parser.inlineParser), htmlRenderer, xmlRenderer);
 
 if (files.length === 0) {
   files = ['/dev/stdin'];
