@@ -1,12 +1,15 @@
 #!/usr/bin/env node
 "use strict";
 
-var fs = require('fs');
-var commonmark = require('../lib/index.js');
+const fs = require('fs');
+const path = require('path');
+const commonmark = require('../lib/index.js');
 var addons = true;
 const toc = require('../addons/toc.js');
 const question = require('../addons/question.js');
 const localAnchor = require('../addons/localanchor.js');
+const include = require('../addons/include.js');
+
 
 // track total time of test
 var totalTime = 0;
@@ -65,6 +68,7 @@ if (addons) {
     toc(reader.addParserFunction('block'), writer, null);
     question(reader.addParserFunction('inline'), writer, null);
     localAnchor(reader.addParserFunction('inline'), writer, null);
+    include(reader.addParserFunction('block'), writer, null);
 }
 
 var results = {
@@ -177,6 +181,7 @@ specTests('test/spec.txt', results, function(z) {
 
 if (addons) {
     specTests('test/newfeatures.txt', results, function(z) {
+	reader.setPath(path.resolve('test'));
         return writer.render(reader.parse(z));
     });
 }
