@@ -264,7 +264,6 @@ This loosens syntax of autolink's to include those which start with
 `#`, so now there are three, emails, absolute URIs, and internal
 links.
 
-
 ## Including other files
 
 This is not done yet, but the idea is to include other files either by path or url. `<<path>>` would include `path` into the spot it is.  This is a block element.
@@ -276,6 +275,24 @@ This is not done yet, but the idea is to include other files either by path or u
 ## attributes, e.g., CSS
 
 Including `{:attr:}` will include attr on the closest inline element to the left.  If there is no inline element to the left, then on the enclosing block.  Finally, if it is at the start of a line, then the immediatly following block.
+
+## Combined test for both questions and anchor in same doc
+
+```````````````````````````````` example
+- {#top} But `definitely` inside `lists` {question}
+- {question} and {question:2} and {question:2}
+- {question:2} and back {question}
+
+Goto <#top>.
+.
+<ul>
+<li><span id="top" /> But <code>definitely</code> inside <code>lists</code> <span class="qnum">1</span></li>
+<li><span class="qnum">2</span> and <span class="qnum">2.A</span> and <span class="qnum">2.B</span></li>
+<li><span class="qnum">2.C</span> and back <span class="qnum">3</span></li>
+</ul>
+<p>Goto <a href="#top">top</a>.</p>
+````````````````````````````````
+
 
 # template for an example which will be tested.
 
