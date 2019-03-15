@@ -266,7 +266,20 @@ links.
 
 ## Including other files
 
-This is not done yet, but the idea is to include other files either by path or url. `<<path>>` would include `path` into the spot it is.  This is a block element.
+Include other files either by path or url. `<<path>>` would include `path` into the spot it is.  This is a block element.
+
+```````````````````````````````` example
+This will test the include functionality.
+
+<<included.md>>
+
+Above this should be the text from `included.md`.
+.
+<p>This will test the include functionality.</p>
+<p>This is stuff from <em>included.md</em>.</p>
+<p>Above this should be the text from <code>included.md</code>.</p>
+````````````````````````````````
+
 
 ## tables
 
