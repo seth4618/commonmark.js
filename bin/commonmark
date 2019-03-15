@@ -8,6 +8,7 @@ var version = require('../package.json').version;
 var parseArgs = require('minimist');
 var toc = require('../addons/toc.js');
 var question = require('../addons/question.js');
+var localAnchor = require('../addons/localanchor.js');
 
 // get arguments
 var args = process.argv.slice(2);
@@ -87,8 +88,9 @@ if (format === 'html') {
     process.stderr.write("Unknown format: " + format + "\n");
     process.exit(1);
 }
-toc(parser.addBlockParser.bind(parser), htmlRenderer, xmlRenderer);
-question(parser.inlineParser.addInlineParser.bind(parser.inlineParser), htmlRenderer, xmlRenderer);
+toc(parser.addParserFunction('block'), htmlRenderer, xmlRenderer);
+question(parser.addParserFunction('inline'), htmlRenderer, xmlRenderer);
+localAnchor(parser.addParserFunction('inline'), htmlRenderer, xmlRenderer);
 
 if (files.length === 0) {
   files = ['/dev/stdin'];
