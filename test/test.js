@@ -3,6 +3,10 @@
 
 var fs = require('fs');
 var commonmark = require('../lib/index.js');
+var addons = true;
+const toc = require('../addons/toc.js');
+const question = require('../addons/question.js');
+const localAnchor = require('../addons/localanchor.js');
 
 // track total time of test
 var totalTime = 0;
@@ -56,6 +60,12 @@ var cursor = {
 var writer = new commonmark.HtmlRenderer();
 var reader = new commonmark.Parser();
 var readerSmart = new commonmark.Parser({smart: true});
+
+if (addons) {
+    toc(reader.addParserFunction('block'), writer, null);
+    question(reader.addParserFunction('inline'), writer, null);
+    localAnchor(reader.addParserFunction('inline'), writer, null);
+}
 
 var results = {
     passed: 0,
@@ -165,7 +175,7 @@ specTests('test/spec.txt', results, function(z) {
         return writer.render(reader.parse(z));
     });
 
-if (false) {
+if (addons) {
     specTests('test/newfeatures.txt', results, function(z) {
         return writer.render(reader.parse(z));
     });
