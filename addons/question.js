@@ -84,7 +84,6 @@ function questionHtmlRenderer(node, entering) {
 }
 
 function questionHtmlInit() {
-    console.log("Initializing question");
     this.questionNumbers = [ 0, 0, 0, 0 ];
     this.lastQuestionLevel = 0;
 }
