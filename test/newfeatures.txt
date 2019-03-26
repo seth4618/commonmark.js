@@ -285,9 +285,47 @@ Above this should be the text from `included.md`.
 
 ## exam questions
 
+Multiple choice, only 1 selection valid:
+
+```````````````````````````````` example
+{radio:begin}
+{answer:a} one asd
+{answer:b}  two asd
+{radio:end}
+.
+<div class="mcquestion"><!-- a -->
+<p>one asd</p>
+<!-- b -->
+<p>two asd</p>
+</div>
+````````````````````````````````
+
 ## attributes, e.g., CSS
 
 Including `{:attr:}` will include attr on the closest inline element to the left.  If there is no inline element to the left, then on the enclosing block.  Finally, if it is at the start of a line, then the immediatly following block.
+
+```````````````````````````````` example
+Hi. this `a code "backtick" containing` para is class threecol {:class="threecol":} and this *strong*. {: class="onstrong" :}
+
+{:class="next":}
+This para should have class next.
+.
+<p>Hi. this <span class="threecol"><code>a code &quot;backtick&quot; containing</code></span> para is class threecol  and this <span class="onstrong"><em>strong</em></span>. </p>
+<div class="next">
+<p>
+This para should have class next.</p>
+</div>
+````````````````````````````````
+
+can have multiple attributes in the same list.  However, to simplify things we limit values to those surrounded by double quotes.
+
+
+```````````````````````````````` example
+Hi. this `a code "backtick" containing` para is {: class="threecol" id='foo' :} and this *strong*.
+.
+<p>Hi. this <span class="threecol" id="foo"><code>a code &quot;backtick&quot; containing</code></span> para is  and this <em>strong</em>.</p>
+````````````````````````````````
+
 
 ## Combined test for both questions and anchor in same doc
 
