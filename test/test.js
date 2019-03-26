@@ -9,7 +9,8 @@ const toc = require('../addons/toc.js');
 const question = require('../addons/question.js');
 const localAnchor = require('../addons/localanchor.js');
 const include = require('../addons/include.js');
-
+const attr = require('../addons/attr.js');
+const examRadio = require('../addons/radio.js');
 
 // track total time of test
 var totalTime = 0;
@@ -69,6 +70,8 @@ if (addons) {
     question(reader.addParserFunction('inline'), writer, null);
     localAnchor(reader.addParserFunction('inline'), writer, null);
     include(reader.addParserFunction('block'), writer, null);
+    attr.install(reader.addParserFunction('inline'), writer, null);
+    examRadio(reader.addParserFunction('block'), writer, null);
 }
 
 var results = {
@@ -182,7 +185,9 @@ specTests('test/spec.txt', results, function(z) {
 if (addons) {
     specTests('test/newfeatures.txt', results, function(z) {
 	reader.setPath(path.resolve('test'));
-        return writer.render(reader.parse(z));
+	let doc = reader.parse(z);
+	doc = attr.rearrange(doc);
+        return writer.render(doc);
     });
 }
 
