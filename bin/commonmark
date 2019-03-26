@@ -12,6 +12,8 @@ const toc = require('../addons/toc.js');
 const question = require('../addons/question.js');
 const localAnchor = require('../addons/localanchor.js');
 const include = require('../addons/include.js');
+const attr = require('../addons/attr.js');
+const examRadio = require('../addons/radio.js');
 
 // get arguments
 var args = process.argv.slice(2);
@@ -95,6 +97,8 @@ toc(parser.addParserFunction('block'), htmlRenderer, xmlRenderer);
 question(parser.addParserFunction('inline'), htmlRenderer, xmlRenderer);
 localAnchor(parser.addParserFunction('inline'), htmlRenderer, xmlRenderer);
 include(parser.addParserFunction('block'), htmlRenderer, xmlRenderer);
+attr.install(parser.addParserFunction('inline'), htmlRenderer, xmlRenderer);
+examRadio(parser.addParserFunction('block'), htmlRenderer, xmlRenderer);
 
 if (files.length === 0) {
   files = ['/dev/stdin'];
@@ -115,6 +119,9 @@ if (argv.tree) {
     var tree = doc.asstring();
     process.stdout.write(tree);
 }
+
+doc = attr.rearrange(doc);
+//console.log(doc.asstring(true));
 
 var rendered = renderer.render(doc);
 
