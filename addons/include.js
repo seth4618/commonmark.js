@@ -81,7 +81,7 @@ const blockStart = function(parser) {
         parser.advanceNextNonspace();
         parser.advanceOffset(match[0].length, false);
         parser.closeUnmatchedBlocks();
-        // add node for the include.  When we get around to finalizing we will recure
+        // add node for the include.  When we get around to finalizing we will recurse
         var container = parser.addChild('include', parser.nextNonspace);
         container.uri = match[1];
         return 2;
