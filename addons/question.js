@@ -104,7 +104,7 @@ function questionXmlRenderer(node, attrs) {
 const C_LEFT_BRACE = 123;
 
 const install = function(aip, html, xml) {
-    Node = aip(C_LEFT_BRACE, 'question', parseQuestion, [ ['level', 'litr'] ]);
+    Node = aip(C_LEFT_BRACE, 'question', parseQuestion, false, [ ['level', 'litr'] ]);
     if (Node === false) throw "Cannot install 'question'";
     if (html) {
         html.question = questionHtmlRenderer; 
