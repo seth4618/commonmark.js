@@ -25,7 +25,7 @@ function renderXML(node, attrs) {
 }
 
 const install = function(aip, html, xml) {
-    Node = aip(C_LEFT_BRACE, 'anchor', parseAnchor, [ ['level', 'litr'] ]);
+    Node = aip(C_LEFT_BRACE, 'anchor', parseAnchor, false, [ ['level', 'litr'] ]);
     if (html) {
         html.anchor = renderHTML; 
     }
