@@ -71,7 +71,8 @@ if (addons) {
     localAnchor(reader.addParserFunction('inline'), writer, null);
     include(reader.addParserFunction('block'), writer, null);
     attr.install(reader.addParserFunction('inline'), writer, null);
-    examRadio(reader.addParserFunction('block'), writer, null);
+    examRadio.blocks(reader.addParserFunction('block'), writer, null);
+    examRadio.inlines(reader.addParserFunction('inline'), writer, null);
 }
 
 var results = {
