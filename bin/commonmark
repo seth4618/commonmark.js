@@ -98,7 +98,8 @@ question(parser.addParserFunction('inline'), htmlRenderer, xmlRenderer);
 localAnchor(parser.addParserFunction('inline'), htmlRenderer, xmlRenderer);
 include(parser.addParserFunction('block'), htmlRenderer, xmlRenderer);
 attr.install(parser.addParserFunction('inline'), htmlRenderer, xmlRenderer);
-examRadio(parser.addParserFunction('block'), htmlRenderer, xmlRenderer);
+examRadio.blocks(parser.addParserFunction('block'), htmlRenderer, xmlRenderer);
+examRadio.inlines(parser.addParserFunction('inline'), htmlRenderer, xmlRenderer);
 
 if (files.length === 0) {
   files = ['/dev/stdin'];
@@ -115,13 +116,12 @@ parser.setPath(path.resolve(path.dirname(basepath)));
 var inp = inps.join('\n');
 var doc = parser.parse(inp);
 
+doc = attr.rearrange(doc);
+
 if (argv.tree) {
     var tree = doc.asstring();
     process.stdout.write(tree);
 }
-
-doc = attr.rearrange(doc);
-//console.log(doc.asstring(true));
 
 var rendered = renderer.render(doc);
 
