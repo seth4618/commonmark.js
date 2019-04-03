@@ -7,7 +7,7 @@ ESLINT=node_modules/.bin/eslint
 UGLIFYJS=node_modules/.bin/uglifyjs
 BROWSERIFY=node_modules/.bin/browserify
 
-.PHONY: dingus dist test bench bench-detailed npm lint clean update-spec
+.PHONY: dingus dist test bench bench-detailed npm lint clean update-spec editor
 
 lint:
 	$(ESLINT) -c eslint.json ${JSMODULES} bin/commonmark test/test.js dingus/dingus.js
@@ -41,5 +41,8 @@ npm:
 
 dingus:
 	make -C dingus dingus
+
+editor:
+	make -C editor dingus
 
 clean:
