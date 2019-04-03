@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Exam Question Editor</title>
+  <link href="bootstrap.min.css" rel="stylesheet">
+  <link href="dingus.css" rel="stylesheet">
+  <script src="jquery.min.js"></script>
+  <script src="bootstrap.min.js"></script>
+  <script src="lodash.min.js"></script>
+  <script src="commonmark.js"></script>
+  <script src="addons.js"></script>
+</head>
+<body>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6">
+	<h1 class="title">Exam Question Editor</h1>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+	<p id="text-controls"><a id="clear-text-box">clear</a></p>
+	<textarea id="text"># Basic Instructions and Info
+
+Press clear above to zap this content.	  
+	  
+{toc}
+
+# Question Numbering
+
+{question} You can number your questions with `{question}`.  If you want sub-questions, then You can indicate the level after a `:`, i.e., `{question:1}` is a top level question, `{question:2}` is a second level question.  E.g.,
+
+{question:2} second-level
+{question:3} third-level
+{question:3} Another third-level
+{question:2} And, another second level.
+
+# Different Styles {: style="background-color: green" :}
+
+{question} You can add styles and classes with `{:attr:}`.  For example `{: style="background-color: blue" :}` should 
+have a background of blue. {: style="background-color: blue" :}
+
+# Local Names for Intra-Document links
+
+{#local} If you want to link to another section in the document, `{#name}` is a target.  You can then link to it with [Document end](#end), e.g., `[Document end](#end)`.
+
+# Exam Questions
+
+## Fill-in the blank
+
+## Multiple-Choice (Single selection)
+
+## Multiple-choice (Multiple selections)
+
+# Tables
+
+{#end} [Return to section about local links](#local)
+</textarea>
+	<ul id="warnings"></ul>
+      </div>
+      <div id="preview" class="col-md-6">
+        <iframe src="preview.html" frameborder="0" sandbox="allow-same-origin"></iframe>
+	<div class="timing">Parsed in <span class="timing" id="parsetime"></span>
+	  ms.  Rendered in <span class="timing" id="rendertime"></span> ms.</div>
+      </div>
+    </div>
+    <script src="dingus.js"></script>
+</body>
+</html>
