@@ -62,9 +62,9 @@ function renderHTML(node, entering) {
     if (entering) {
         if (debugAnswer) console.log('render radio');
         if (debugAnswer) console.log(node.asstring(true));
-        this.tag('div', [['class', 'mcquestion']], false);
+        this.tag('form', [['class', 'mcquestion'], ['id',this.nextqid(node)]], false);
     } else {
-        this.tag('/div');
+        this.tag('/form');
         this.cr();
     }
 }
@@ -129,7 +129,11 @@ const answerStart = function(parser, container) {
 
 function answerHTML(node, entering) {
     if (entering) {
-        this.lit('<!-- '+node.key+' -->');
+        let p = node.parent;
+        while ((p != null) && (p.type != 'radio')) p = p.parent;
+        if (p == null) return;	// don't understand how I got here, render nothing?
+        node.inputid = p.inputid;
+        this.tag('input', [['type', 'radio'], ['name', this.nextname(node)], ['value', node.key]], true);        
         if (debugAnswer) console.log('render answer:'+node.key);
         if (debugAnswer) console.log(node.asstring(true));
     }
@@ -137,6 +141,26 @@ function answerHTML(node, entering) {
 
 function answerXML(node, attrs) {
 }
+
+////////////////////////////////////////////////////////////////
+
+function initqid() {
+    this.qid = 0;
+}
+
+function nextqid(node) {
+    if ((!('inputid' in node)) || (node.inputid === undefined)) {
+        const uid = this.qid++;
+        node.inputid = "Q"+uid;
+    }
+    return node.inputid;
+};
+
+function nextname(node) {
+    if (node.type == "blank") return "text"+node.inputid;
+    else if (node.type == "answer") return "radio"+node.inputid;
+    else return "?????"+node.inputid;
+};
 
 ////////////////////////////////////////////////////////////////
 // blank:x
@@ -159,10 +183,7 @@ const parseBlank =  function(block) {
 
 function blankHTML(node, entering) {
     if (entering) {
-        this.cr();
-        this.lit('<!-- blank -->');
-        this.lit('<!-- '+node.qwidth+' -->');
-        this.cr();
+        this.tag('input', [['type', 'text'], ['id', this.nextqid(node)], ['name', this.nextname(node)], ['size', node.qwidth]], true);
     }
 }
 
@@ -246,11 +267,14 @@ const installInlines = function(aip, html, xml) {
     for (const info of inliners) {
         aip(C_LEFT_BRACE, info[0], info[1], false, [ ]);
         if (html) {
+            html.addInit(initqid);
+            html.nextqid = nextqid;
+            html.nextname = nextname;
             html[info[0]] = info[2]; 
         }
         if (xml) {
             xml.addRenderer(info[0], info[3]);
-        }
+v        }
     }
 };
 
