@@ -16,3 +16,21 @@ span.timing { font-weight: bold; }
 .selected { background-color: #eeeeee; }
 textarea#text { width: 100%; overflow: scroll; resize: vertical; height: 400px; font-family: monospace; white-space: pre; word-wrap: normal; background-color: white; color: black; }
 span.litr { color: brown; }
+
+.qnum::after {
+    content: ") ";
+}
+
+.qlevel1 {
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+.qlevel2 {
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+.qlevel3 {
+     font-size: 1.1em;
+}
