@@ -70,7 +70,7 @@ function questionHtmlRenderer(node, entering) {
     if (entering) {
         const level = node.level;
         while (level >= this.questionNumbers.length) this.questionNumbers.push(0);
-        this.tag('span', [['class', 'qnum']]);
+        this.tag('span', [['class', 'qnum qlevel'+level]]);
         this.questionNumbers[level]++;
         this.out(formatQuestionNumber(level, this.questionNumbers));
         this.tag('/span');
