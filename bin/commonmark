@@ -14,6 +14,7 @@ const localAnchor = require('../addons/localanchor.js');
 const include = require('../addons/include.js');
 const attr = require('../addons/attr.js');
 const examRadio = require('../addons/radio.js');
+const table = require('../addons/table.js');
 
 // get arguments
 var args = process.argv.slice(2);
@@ -97,9 +98,10 @@ toc(parser.addParserFunction('block'), htmlRenderer, xmlRenderer);
 question(parser.addParserFunction('inline'), htmlRenderer, xmlRenderer);
 localAnchor(parser.addParserFunction('inline'), htmlRenderer, xmlRenderer);
 include(parser.addParserFunction('block'), htmlRenderer, xmlRenderer);
-attr.install(parser.addParserFunction('inline'), htmlRenderer, xmlRenderer);
+attr(parser.addParserFunction('inline'), htmlRenderer, xmlRenderer);
 examRadio.blocks(parser.addParserFunction('block'), htmlRenderer, xmlRenderer);
 examRadio.inlines(parser.addParserFunction('inline'), htmlRenderer, xmlRenderer);
+table(parser.addParserFunction('block'), htmlRenderer, xmlRenderer);
 
 if (files.length === 0) {
   files = ['/dev/stdin'];
@@ -115,8 +117,6 @@ parser.setPath(path.resolve(path.dirname(basepath)));
 
 var inp = inps.join('\n');
 var doc = parser.parse(inp);
-
-doc = attr.rearrange(doc);
 
 if (argv.tree) {
     var tree = doc.asstring();
