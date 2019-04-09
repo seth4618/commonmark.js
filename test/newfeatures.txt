@@ -137,15 +137,15 @@ element which will do proper numbering with sub-questions.  If
 {question:2} four-1
 {question:2} four-2
 .
-<p><span class="qnum">1</span> one
-<span class="qnum">2</span> two
-<span class="qnum">3</span> three
-<span class="qnum">3.A</span> three-1
-<span class="qnum">3.B</span> three-2
-<span class="qnum">3.C</span> three-3
-<span class="qnum">4</span> four
-<span class="qnum">4.A</span> four-1
-<span class="qnum">4.B</span> four-2</p>
+<p><span class="qnum qlevel1">1</span> one
+<span class="qnum qlevel1">2</span> two
+<span class="qnum qlevel1">3</span> three
+<span class="qnum qlevel2">3.A</span> three-1
+<span class="qnum qlevel2">3.B</span> three-2
+<span class="qnum qlevel2">3.C</span> three-3
+<span class="qnum qlevel1">4</span> four
+<span class="qnum qlevel2">4.A</span> four-1
+<span class="qnum qlevel2">4.B</span> four-2</p>
 ````````````````````````````````
 
 Question numbering is different per level with arabic numbers at level 1, capital letters at level 2, roman numbers at level 3, and lower case letters at level 4.  This sequence repeats as necessary.  \{question} nodes are inlines so they can appear anywhere (but obviouslny not in codeblocks).
@@ -195,46 +195,46 @@ this is code {question}
 - {question} and {question:2} and {question:2}
 - {question:2} and back {question}
 .
-<p><span class="qnum">1</span> one
-<span class="qnum">2</span> two
-<span class="qnum">3</span> three
-<span class="qnum">3.A</span> three-1
-<span class="qnum">3.B</span> three-2
-<span class="qnum">3.C</span> three-3
-<span class="qnum">4</span> four
-<span class="qnum">4.A</span> four-1
-<span class="qnum">4.B</span> four-2
-<span class="qnum">4.B.i</span> four-2-one
-<span class="qnum">4.B.ii</span> four-2-two
-<span class="qnum">5</span> five
-<span class="qnum">5.A</span> five-1
-<span class="qnum">5.A.i</span> five-1-one
-<span class="qnum">5.A.i.a</span> five-1-one-A
-<span class="qnum">5.A.i.b</span> five-1-one-B
-<span class="qnum">5.A.i.c</span> five-1-one-C
-<span class="qnum">5.A.i.d</span> five-1-one-D
-<span class="qnum">5.A.i.e</span> five-1-one-E
-<span class="qnum">5.A.ii</span> five-2
-<span class="qnum">5.A.iii</span> five-3
-<span class="qnum">5.A.iv</span> five-4
-<span class="qnum">5.A.v</span> five-5
-<span class="qnum">5.A.vi</span> five-6
-<span class="qnum">5.A.vii</span> five-7
-<span class="qnum">6</span> six
-<span class="qnum">7</span> seven
-<span class="qnum">7.@.i</span> seven-0-one
-<span class="qnum">7.@.ii</span> seven-0-two</p>
+<p><span class="qnum qlevel1">1</span> one
+<span class="qnum qlevel1">2</span> two
+<span class="qnum qlevel1">3</span> three
+<span class="qnum qlevel2">3.A</span> three-1
+<span class="qnum qlevel2">3.B</span> three-2
+<span class="qnum qlevel2">3.C</span> three-3
+<span class="qnum qlevel1">4</span> four
+<span class="qnum qlevel2">4.A</span> four-1
+<span class="qnum qlevel2">4.B</span> four-2
+<span class="qnum qlevel3">4.B.i</span> four-2-one
+<span class="qnum qlevel3">4.B.ii</span> four-2-two
+<span class="qnum qlevel1">5</span> five
+<span class="qnum qlevel2">5.A</span> five-1
+<span class="qnum qlevel3">5.A.i</span> five-1-one
+<span class="qnum qlevel4">5.A.i.a</span> five-1-one-A
+<span class="qnum qlevel4">5.A.i.b</span> five-1-one-B
+<span class="qnum qlevel4">5.A.i.c</span> five-1-one-C
+<span class="qnum qlevel4">5.A.i.d</span> five-1-one-D
+<span class="qnum qlevel4">5.A.i.e</span> five-1-one-E
+<span class="qnum qlevel3">5.A.ii</span> five-2
+<span class="qnum qlevel3">5.A.iii</span> five-3
+<span class="qnum qlevel3">5.A.iv</span> five-4
+<span class="qnum qlevel3">5.A.v</span> five-5
+<span class="qnum qlevel3">5.A.vi</span> five-6
+<span class="qnum qlevel3">5.A.vii</span> five-7
+<span class="qnum qlevel1">6</span> six
+<span class="qnum qlevel1">7</span> seven
+<span class="qnum qlevel3">7.@.i</span> seven-0-one
+<span class="qnum qlevel3">7.@.ii</span> seven-0-two</p>
 <blockquote>
-<p>and here we have <span class="qnum">8</span> nodes inside other ndoes <span class="qnum">9</span></p>
+<p>and here we have <span class="qnum qlevel1">8</span> nodes inside other ndoes <span class="qnum qlevel1">9</span></p>
 </blockquote>
 <p>But not inside code blocks</p>
 <pre><code>this is code {question}
 {question}
 </code></pre>
 <ul>
-<li>But definitely inside lists <span class="qnum">10</span></li>
-<li><span class="qnum">11</span> and <span class="qnum">11.A</span> and <span class="qnum">11.B</span></li>
-<li><span class="qnum">11.C</span> and back <span class="qnum">12</span></li>
+<li>But definitely inside lists <span class="qnum qlevel1">10</span></li>
+<li><span class="qnum qlevel1">11</span> and <span class="qnum qlevel2">11.A</span> and <span class="qnum qlevel2">11.B</span></li>
+<li><span class="qnum qlevel2">11.C</span> and back <span class="qnum qlevel1">12</span></li>
 </ul>
 ````````````````````````````````
 
@@ -246,9 +246,9 @@ A smaller test case for question nodes in lists.
 - {question:2} and back {question}
 .
 <ul>
-<li>But <code>definitely</code> inside <code>lists</code> <span class="qnum">1</span></li>
-<li><span class="qnum">2</span> and <span class="qnum">2.A</span> and <span class="qnum">2.B</span></li>
-<li><span class="qnum">2.C</span> and back <span class="qnum">3</span></li>
+<li>But <code>definitely</code> inside <code>lists</code> <span class="qnum qlevel1">1</span></li>
+<li><span class="qnum qlevel1">2</span> and <span class="qnum qlevel2">2.A</span> and <span class="qnum qlevel2">2.B</span></li>
+<li><span class="qnum qlevel2">2.C</span> and back <span class="qnum qlevel1">3</span></li>
 </ul>
 ````````````````````````````````
 
@@ -283,6 +283,61 @@ Above this should be the text from `included.md`.
 
 ## tables
 
+Complex table with code, questions, blanks, and quoted blocks inside
+
+```````````````````````````````` example
+Before the table.
+
+{table:begin:3:|}
+EXAMPLE    | `*x` | `0x2FB8`
+{question} | `*((int *) x)` | {blank:10}
+{question} | `*(x + 10)` | {blank:10}
+{question} | 
+`*(((char *) x) + 7)` | 
+> {blank:10}
+
+{question} | `*(((char *)(x + 3)) + 3)` | {blank:10}
+{question} | `*((short *)(((int *) x) + 9))` | {blank:10}
+{question} | `*(((short *)(((int *) x) + 6)) + 8)` | {blank:10}
+{question} | `*((int *) (((char *)(x + 3)) + 5))` | {blank:10}
+{table:end}
+
+after the table.
+.
+<p>Before the table.</p>
+<table><tr><td>EXAMPLE</td>
+<td><code>*x</code></td>
+<td><code>0x2FB8</code></td>
+</tr>
+<tr><td><code>*((int *) x)</code></td>
+<td><input type="text" id="Q0" name="textQ0" size="10" /></td>
+<td><code>*(x + 10)</code></td>
+</tr>
+<tr><td><input type="text" id="Q1" name="textQ1" size="10" /></td>
+<td><code>*(((char *) x) + 7)</code></td>
+<td></td>
+</tr>
+<tr><td>
+<blockquote>
+<p><input type="text" id="Q2" name="textQ2" size="10" /></p>
+</blockquote>
+<p><span class="qnum qlevel1">1</span></p>
+</td>
+<td><code>*(((char *)(x + 3)) + 3)</code></td>
+<td><input type="text" id="Q3" name="textQ3" size="10" /></td>
+</tr>
+<tr><td><code>*((short *)(((int *) x) + 9))</code></td>
+<td><input type="text" id="Q4" name="textQ4" size="10" /></td>
+<td><code>*(((short *)(((int *) x) + 6)) + 8)</code></td>
+</tr>
+<tr><td><input type="text" id="Q5" name="textQ5" size="10" /></td>
+<td><code>*((int *) (((char *)(x + 3)) + 5))</code></td>
+<td><input type="text" id="Q6" name="textQ6" size="10" /></td>
+</tr>
+</table>
+<p>after the table.</p>
+````````````````````````````````
+
 ## exam questions
 
 Multiple choice, only 1 selection valid:
@@ -293,11 +348,11 @@ Multiple choice, only 1 selection valid:
 {answer:b}  two asd
 {radio:end}
 .
-<div class="mcquestion"><!-- a -->
+<form class="mcquestion" id="Q0"><input type="radio" name="radioQ0" value="a" />
 <p>one asd</p>
-<!-- b -->
+<input type="radio" name="radioQ0" value="b" />
 <p>two asd</p>
-</div>
+</form>
 ````````````````````````````````
 
 ## attributes, e.g., CSS
@@ -337,9 +392,9 @@ Hi. this `a code "backtick" containing` para is {: class="threecol" id='foo' :} 
 Goto <#top>.
 .
 <ul>
-<li><span id="top" /> But <code>definitely</code> inside <code>lists</code> <span class="qnum">1</span></li>
-<li><span class="qnum">2</span> and <span class="qnum">2.A</span> and <span class="qnum">2.B</span></li>
-<li><span class="qnum">2.C</span> and back <span class="qnum">3</span></li>
+<li><span id="top" /> But <code>definitely</code> inside <code>lists</code> <span class="qnum qlevel1">1</span></li>
+<li><span class="qnum qlevel1">2</span> and <span class="qnum qlevel2">2.A</span> and <span class="qnum qlevel2">2.B</span></li>
+<li><span class="qnum qlevel2">2.C</span> and back <span class="qnum qlevel1">3</span></li>
 </ul>
 <p>Goto <a href="#top">top</a>.</p>
 ````````````````````````````````
