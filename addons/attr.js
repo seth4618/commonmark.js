@@ -57,7 +57,7 @@ function renderXML(node, attrs) {
 // called after tree is complete.  Used to move attrs nodes to correct place.
 // if next node is a block node: make block a child of this node and will render this as div with attrs
 // otherwise sweep back within same parent looking for a span, make it a child of this node and render as span with attrs
-function rearrange(block) {
+function rearrange(parser, block) {
     let walker = block.walker();
     var event;
     
@@ -96,13 +96,12 @@ function rearrange(block) {
             }
         }
     }
-    return block;
 }
 
 const C_LEFT_BRACE = 123;
 
 const install = function(aip, html, xml) {
-    Node = aip(C_LEFT_BRACE, nodetype, parseAttrList, true, [ ['attrinfo', 'litr'], ['renderattr', 'litr'], ['use', 'litr'] ]);
+    Node = aip(C_LEFT_BRACE, nodetype, parseAttrList, true, [ ['attrinfo', 'litr'], ['renderattr', 'litr'], ['use', 'litr'] ], rearrange);
     if (html) {
         html[nodetype] = renderHTML; 
     }
@@ -112,4 +111,4 @@ const install = function(aip, html, xml) {
 
 };
 
-module.exports = {install: install, rearrange: rearrange};
+module.exports = install;
