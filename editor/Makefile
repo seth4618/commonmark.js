@@ -4,7 +4,7 @@ LIBFILES=../lib/blocks.js ../lib/common.js ../lib/from-code-point.js ../lib/inli
 BOWER=../node_modules/.bin/bower
 BROWSERIFY=../node_modules/.bin/browserify
 HTTPSERVER=../node_modules/.bin/http-server
-ADDONS=$(wildcard ../lib/*.js)
+ADDONS=$(wildcard ../addons/*.js)
 
 all: $(ALL) components
 
