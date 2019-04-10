@@ -1,17 +1,51 @@
-Before the table.
+<style>
+td { border: 1px black solid; }
+</style>
+
+A basic 3 column table.  One row per line, but that is not required.
 
 {table:begin:3:|}
-EXAMPLE    | `*x` | `0x2FB8`
-{question} | `*((int *) x)` | {blank:10}
-{question} | `*(x + 10)` | {blank:10}
-{question} | 
-`*(((char *) x) + 7)` | 
-> {blank:10}
-
-{question} | `*(((char *)(x + 3)) + 3)` | {blank:10}
-{question} | `*((short *)(((int *) x) + 9))` | {blank:10}
-{question} | `*(((short *)(((int *) x) + 6)) + 8)` | {blank:10}
-{question} | `*((int *) (((char *)(x + 3)) + 5))` | {blank:10}
+a | b | c |
+d | e | f |
 {table:end}
 
-after the table.
+A basic 3 column table.  two rows, but they don't have to be on the same line
+
+{table:begin:3:|}
+a | 
+b | c |
+d 
+| e | f |
+{table:end}
+
+A basic 3 column table.  two rows, but they don't have to be on the same line and blank lines inside are ignored.
+
+{table:begin:3:|}
+a | 
+b | c |
+
+d 
+| e | f |
+{table:end}
+
+A basic 3 column table.  two rows, but they don't have to be on the same line and blank lines inside are ignored between rows as well as between columns.
+
+{table:begin:3:|}
+a | 
+b | c |
+
+d 
+
+| e | f |
+{table:end}
+
+Different separator
+
+{table:begin:3:&}
+a & 
+b & c &
+
+d 
+
+& e & f &
+{table:end}
