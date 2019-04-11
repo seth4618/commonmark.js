@@ -16,6 +16,8 @@ span.timing { font-weight: bold; }
 .selected { background-color: #eeeeee; }
 textarea#text { width: 100%; overflow: scroll; resize: vertical; height: 400px; font-family: monospace; white-space: pre; word-wrap: normal; background-color: white; color: black; }
 span.litr { color: brown; }
+.text-control { background-color: #eeeeee; padding: 4px; margin-left: .1em; margin-right: .1em; border-radius: 15% / 40%;}
+.custom-red { background: red; }
 
 .qnum::after {
     content: ") ";
