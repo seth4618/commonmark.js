@@ -43,7 +43,7 @@ var td2string = function() {
              ' sepr:', this.sepr, 
              ' cntr:', this.counter, 
              ' rowid:', this.row?this.row._uid:'(null)',
-             ' colid:', this.cell?this.col._uid:'(null)',
+             ' colid:', this.cell?this.cell._uid:'(null)',
              ' rows:', this.rows.length,
              ' NNR:', this.needNewRow ? "YES" : "no" ].join("");
 };
@@ -64,7 +64,7 @@ var addString2cell = function(string) {
             n = new Node('paragraph', this.lastpos);
             n._string_content = p;
         }
-        console.log('Adding para with [%s] to %s', p, this.tostring());
+        //console.log('Adding para with [%s] to %s', p, this.tostring());
         this.addNode2cell(n);
         needNewCell = true;	// before adding text here, make sure to add another cell.
     }
@@ -98,7 +98,7 @@ var TableData = function(cols, sepr, sp) {
 
 // break the subtree into rows and cols
 const createRowsAndColumns = function(parser, block) {
-    console.log(block.asstring());
+    //console.log(block.asstring());
     const columns = block.columns;
     const sepr = block.separator;
     let tabledata = new TableData(columns, sepr || "|", block.sourcepos);
@@ -106,11 +106,12 @@ const createRowsAndColumns = function(parser, block) {
     for (let child of children) {
         tabledata.lastpos = child.sourcepos;
         if (child.type == 'paragraph') {
+            //console.log('if ==> %s', child.tostring());
             if (columns == 0) {
                 // break into lines and end each line with a new row
                 const lines = child._string_content.split("\n");
                 for (let line of lines) {
-                    console.log('para ==> [%s]', line);
+                    //console.log('para ==> [%s]', line);
                     tabledata.addString2cell(line);
                     tabledata.cell = null;
                     tabledata.needNewRow = true;
@@ -120,7 +121,7 @@ const createRowsAndColumns = function(parser, block) {
             }
         } else {
             // add this node to the current cell
-            console.log('else ==>');
+            //console.log('else ==> %s', child.tostring());
             tabledata.addNode2cell(child);
         }
     }
@@ -136,8 +137,8 @@ const createRowsAndColumns = function(parser, block) {
     for (let r of tabledata.rows) {
         block.appendChild(r);
     }
-    console.log('-------------');
-    console.log(block.asstring());
+    //console.log('-------------');
+    //console.log(block.asstring());
 };
 
 const blockfuncs =  {
@@ -177,7 +178,7 @@ const blockStart = function(parser) {
         var container = parser.addChild(nodetype, parser.nextNonspace);
         if (match.length >= 3)
             container.separator = match[3];
-        console.log('%d %s', match.length, match);
+        //console.log('%d %s', match.length, match);
         if ((match.length == 4)&&((typeof match[2] !== 'undefined') && (match[2].trim().length > 0))) {
             // this is a table that can contain blocks
             container.columns = parseInt(match[2]);
@@ -197,7 +198,7 @@ const blockStart = function(parser) {
 
 function renderHTML(node, entering) {
     if (entering) {
-        console.log(node.asstring());
+        //console.log(node.asstring());
         this.tag('table', [], false);
     } else {
         this.tag('/table');
