@@ -8,14 +8,16 @@ var writer = new commonmark.HtmlRenderer({ sourcepos: true });
 var htmlwriter = new commonmark.HtmlRenderer({ sourcepos: false });
 var reader = new commonmark.Parser();
 var addons = window.addons;
+const Menu = window.Menu;
 
 addons.toc(reader.addParserFunction('block'), writer, null);
 addons.question(reader.addParserFunction('inline'), writer, null);
 addons.localAnchor(reader.addParserFunction('inline'), writer, null);
 addons.include(reader.addParserFunction('block'), writer, null);
-addons.attr.install(reader.addParserFunction('inline'), writer, null);
+addons.attr(reader.addParserFunction('inline'), writer, null);
 addons.examRadio.blocks(reader.addParserFunction('block'), writer, null);
 addons.examRadio.inlines(reader.addParserFunction('inline'), writer, null);
+addons.table(reader.addParserFunction('block'), writer, null);
 
 function getQueryVariable(variable) {
     var query = window.location.search.substring(1);
@@ -34,7 +36,6 @@ var render = function(parsed) {
         return;
     }
     var startTime = new Date().getTime();
-    parsed = addons.attr.rearrange(parsed);
     var result = writer.render(parsed);
     var endTime = new Date().getTime();
     var renderTime = endTime - startTime;
@@ -94,9 +95,88 @@ var parseAndRender = function() {
     markSelection();
 };
 
+let $editor = null;
+
+function actualQuestionInsertion(val) {
+    $editor.focus();
+    const start = $editor.getSelection().start;
+    $editor.insertText('{question:'+val+'}', start, "select");
+    $editor.focus();
+    setTimeout(function() { $editor.focus(); $editor.setSelection(start+10, start+11); }, 100);
+}
+
+function insertQuestion() {
+    $editor.collapseSelection(true);
+    $('#level-dialog').dialog("open");
+}
+
+// return true if cursor is at start of line
+function atLineStart() {
+    const currentSelection = $editor.getSelection();
+    if (currentSelection.start == 0) return true;
+    $editor.setSelection(currentSelection.start-1, currentSelection.end);
+    const sel = $editor.getSelection();
+    const prevchar = sel.text.charAt(0);
+    $editor.setSelection(currentSelection.start, currentSelection.end);
+    return (prevchar == '\n');
+}
+
+function showError(msg) {
+    const $dialog = $('#error-dialog');
+    $dialog.empty();
+    $dialog.append('<p>'+msg+'</p>');
+    $dialog.dialog("open");
+}
+
+function insertRadio() {
+    $editor.collapseSelection(true);
+    const currentSelection = $editor.getSelection();
+    $editor.insertText('{radio:begin}\n{answer:a} answer-a\n{radio:end}\n', $editor.getSelection().start, "collapseToStart");
+    $editor.setSelection(currentSelection.start+14, currentSelection.start+14+19);
+}
+
+function insertBlank() {
+    $editor.collapseSelection(true);
+    const currentSelection = $editor.getSelection();
+    $editor.insertText('{blank:10}', $editor.getSelection().start, "collapseToStart");
+    $editor.setSelection(currentSelection.start+7, currentSelection.start+9);
+}
+
+function insertSolutionBlock() {
+    if (!atLineStart()) {
+        showError('Need to be at the start of a line to insert a solution block');
+        return;
+    }
+    $editor.collapseSelection(true);
+    const currentSelection = $editor.getSelection();
+    $editor.insertText('{solution:begin}\nanswer, points, ... [no comma after last one]\n{solution:end}\n', currentSelection.start, "collapseToStart");
+    $editor.setSelection(currentSelection.start+17, currentSelection.start+17+45);
+}
+
+function actualTableInsertion(cols, sepr) {
+    const start = $editor.getSelection().start;
+    const startTable = '{table:begin:'+cols+':'+sepr+'}\n';
+    let seprs = new Array(cols);
+    for (let i=0; i<cols; i++) seprs[i] = 'Col-'+(i+1);
+    const seprline = seprs.join(' '+sepr+' ');
+    $editor.insertText(startTable+seprline+'|\n{table:end}\n', start, "collapseToStart");
+    console.log(start, startTable.length);
+    setTimeout(function() { $editor.focus(); $editor.setSelection(start+startTable.length, start+startTable.length+5); }, 100);
+}
+
+function insertTable() {
+    if (!atLineStart()) {
+        showError('Need to be at the start of a line to insert a table');
+        return;
+    }
+    $editor.collapseSelection(true);
+    $('#table-dialog').dialog("open");
+}
+
 $(document).ready(function() {
   $('iframe').on('load', function() {
-    var textarea = $("#text");
+      var textarea = $("#text");
+      $editor = textarea;
     var initial_text = getQueryVariable("text");
     var smartSelected = getQueryVariable("smart") === "1";
     $("#smart").prop('checked', smartSelected);
@@ -112,6 +192,13 @@ $(document).ready(function() {
         parseAndRender();
     });
 
+      $('#insert-question').click(insertQuestion);
+      $('#insert-radio').click(insertRadio);
+      $('#insert-blank').click(insertBlank);
+      $('#insert-solution-block').click(insertSolutionBlock);
+      $('#insert-table').click(insertTable);
+      
+
     textarea.bind('input propertychange',
                   _.debounce(parseAndRender, 50, { maxWait: 100 }));
     //textarea.on('scroll', _.debounce(syncScroll, 50, { maxWait: 50 }));
@@ -124,4 +211,47 @@ $(document).ready(function() {
         parseAndRender();
     });
   });
+
+    $('#error-dialog').dialog({
+	autoOpen: false,
+	width: 400,
+        modal: true,
+        classes: {
+            "ui-dialog-title": "custom-red"
+        }
+    });
+
+    $('#level-dialog').dialog({
+        autoOpen: false,
+	width: 400,
+        modal: true,
+        buttons: {
+            'Insert': function () {
+                var name = $('input[name="level"]').val();
+                actualQuestionInsertion(name);
+                $(this).dialog('close');
+            },
+            'Cancel': function () {
+                $(this).dialog('close');
+            }
+        }
+    });
+
+    $('#table-dialog').dialog({
+        autoOpen: false,
+	width: 400,
+        modal: true,
+        buttons: {
+            'Insert': function () {
+                var cols = $('input[name="cols"]').val();
+                var sepr = $('input[name="sepr"]').val();
+                actualTableInsertion(parseInt(cols), sepr);
+                $(this).dialog('close');
+            },
+            'Cancel': function () {
+                $(this).dialog('close');
+            }
+        }
+    });
+    
 });
