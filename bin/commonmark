@@ -15,13 +15,14 @@ const include = require('../addons/include.js');
 const attr = require('../addons/attr.js');
 const examRadio = require('../addons/radio.js');
 const table = require('../addons/table.js');
+const ExamRenderer = require('../addons/exam.js');
 
 // get arguments
 var args = process.argv.slice(2);
 var argv = parseArgs(args,
-  {boolean: ["ast", "xml", "time", "smart",
+		     {boolean: ["ast", "xml", "time", "smart", "nostdout", 
              "safe", "sourcepos", "help", "version", "tree"],
-   string: ["to", "t"],
+		      string: ["to", "t", "outdir"],
    unknown: function(o) {
      if (/^-/.test(o)) {
       process.stderr.write("Unknown option " + o + "\n");
@@ -40,9 +41,11 @@ var usage = function() {
     "-t,--to FORMAT  Specify output format (xml, html, ast)\n" +
     "--time          Produce timings for phases of parsing and rendering\n" +
     "--smart         Parse 'smart' punctuation\n" +
-    "--tree         output parse tree\n" +
+    "--tree          output parse tree\n" +
     "--safe          Omit raw HTML and potentially unsafe attributes\n" +
     "--sourcepos     Include source position attributes in HTML tags\n" +
+    "--nostdout      Don't output results to stdout, use filename\n" +
+    "--outdir DIR    path to place to put files if --nostdout\n" +
     "--version       Print version information\n" +
     "--help          Print usage information\n");
     process.exit(0);
@@ -57,8 +60,10 @@ if (argv.version) {
     process.exit(0);
 }
 
-var format = argv.to || argv.t || (argv.xml ? 'xml' :
+const format = argv.to || argv.t || (argv.xml ? 'xml' :
                                       (argv.ast ? 'ast' : 'html'));
+
+const outExtension = "."+(format == 'exam' ? 'html' : format);
 
 var options = {
     time: argv.time,
@@ -74,7 +79,7 @@ var renderer;
 var htmlRenderer = null;
 var xmlRenderer = null;
 
-if (format === 'html') {
+if ((format === 'html')||(format === 'exam')) {
     renderer = new commonmark.HtmlRenderer(options);
     htmlRenderer = renderer;
 } else if (format === 'xml') {
@@ -104,16 +109,27 @@ examRadio.inlines(parser.addParserFunction('inline'), htmlRenderer, xmlRenderer)
 table(parser.addParserFunction('block'), htmlRenderer, xmlRenderer);
 
 if (files.length === 0) {
-  files = ['/dev/stdin'];
+    files = ['/dev/stdin'];
 }
+
+const basepath = (files.length == 1 ? files[0] : undefined);
+parser.setPath(path.resolve(path.dirname(basepath)));
+
+let outbasename = "";
+let outfile = process.stdout;
+if (argv.nostdout) {
+    if (files.length !== 1) {
+	process.stderr.write("When --nostdout set, must have exactly one input file set\n");
+	process.exit(1);
+    }
+    outbasename = path.resolve(argv.outdir, path.basename(basepath, ".md"));
+    outfile = fs.createWriteStream(outbasename+outExtension);
+} 
 
 for (i = 0; i < files.length; i++) {
   var file = files[i];
   inps.push(fs.readFileSync(file, 'utf8'));
 }
-
-const basepath = (files.length == 1 ? files[0] : undefined);
-parser.setPath(path.resolve(path.dirname(basepath)));
 
 var inp = inps.join('\n');
 var doc = parser.parse(inp);
@@ -125,4 +141,26 @@ if (argv.tree) {
 
 var rendered = renderer.render(doc);
 
-if (!options.time) { process.stdout.write(rendered); }
+if (!options.time) { outfile.write(rendered); }
+
+if (format == 'exam') {
+    const erender = new ExamRenderer(options);
+    const examoutput = erender.render(doc);
+    const numqs = erender.getNumQuestions();
+    if (argv.nostdout)
+	outfile = fs.createWriteStream(outbasename+'.exam');
+
+    if (numqs > 0) {
+	const headeroutput = erender.getHeader();
+	if (erender.checkExamTypes()) {
+	    process.stderr.write('There are '+numqs+' blanks/MC/Etc. in this question.\n');
+	    outfile.write('\n----- EXAM INFO -----\n');
+	    outfile.write(headeroutput);
+	    outfile.write(examoutput);
+	} else {
+	    process.stderr.write('Error in solution blocks: '+headeroutput);
+	}
+    } else {
+	outfile.write('No questions\n');
+    }
+}
