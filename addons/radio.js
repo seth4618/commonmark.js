@@ -33,7 +33,7 @@ const blockfuncs =  {
         }
     },
     finalize: function() { return; },
-    canContain: function(t) { return (t === 'answer'); },
+    canContain: function(t) { return ((t === 'paragraph')||(t === 'answer')); },
     acceptsLines: false
 };
 
@@ -158,9 +158,43 @@ function nextqid(node) {
 
 function nextname(node) {
     if (node.type == "blank") return "text"+node.inputid;
-    else if (node.type == "answer") return "radio"+node.inputid;
+    else if ((node.type == "answer")||(node.type == "ans")) return "radio"+node.inputid;
     else return "?????"+node.inputid;
 };
+
+////////////////////////////////////////////////////////////////
+// ans:x
+
+const reAns = /^\{ans\s*:\s*([^}]+)\s*\}/;
+
+const parseAns =  function(block) {
+    const blank = this.match(reAns);
+    if (blank === null) {
+        return false;
+    }
+    const match = blank.match(reAns);
+    let node = new Node('ans');
+    node.key = match[1];
+    block.appendChild(node);
+    return true;
+};
+
+
+function ansHTML(node, entering) {
+    if (entering) {
+        let p = node.parent;
+        while ((p != null) && (p.type != 'radio')) p = p.parent;
+        if (p == null) return;	// don't understand how I got here, render nothing?
+        node.inputid = p.inputid;
+        this.tag('input', [['type', 'radio'], 
+                           ['name', this.nextname(node)], 
+                           ['value', node.key]], true);        
+        
+    }
+}
+
+function ansXML(node, attrs) {
+}
 
 ////////////////////////////////////////////////////////////////
 // blank:x
@@ -238,7 +272,6 @@ function solutionHTML(node, entering) {
     if (entering) {
         this.cr();
         this.lit('<!-- solution -->');
-        this.lit('<!-- '+node._string_content+' -->');
         this.cr();
     }
 }
@@ -250,7 +283,8 @@ const installers = [ [nodetype, blockStart, blockfuncs, renderHTML, renderXML],
                      ['answer', answerStart, answerFuncs, answerHTML, answerXML],
                      ['solution', solutionStart, solutionFuncs, solutionHTML, solutionXML] ];  
 
-const inliners = [ ['blank', parseBlank, blankHTML, blankXML] ];
+const inliners = [ ['blank', parseBlank, blankHTML, blankXML],
+                   ['ans', parseAns, ansHTML, ansXML ] ];
 
 
 const installBlocks = function(abp, html, xml) {
