@@ -4,8 +4,11 @@
   <meta charset="utf-8">
   <title>Exam Question Editor</title>
   <link href="bootstrap.min.css" rel="stylesheet">
+  <link href="jquery-ui.min.css" rel="stylesheet">
   <link href="dingus.css" rel="stylesheet">
   <script src="jquery.min.js"></script>
+  <script src="jquery-ui.min.js"></script>
+  <script src="rangyinputs-jquery.js"></script>
   <script src="bootstrap.min.js"></script>
   <script src="lodash.min.js"></script>
   <script src="commonmark.js"></script>
@@ -20,8 +23,15 @@
     </div>
     <div class="row">
       <div class="col-md-6">
-	<p id="text-controls"><a id="clear-text-box">clear</a></p>
-	<textarea id="text"># Basic Instructions and Info
+	<p id="text-controls">
+	  <a class="text-control" id="clear-text-box">clear</a>
+	  <a class="text-control" id="insert-question">question tag</a>
+	  <a class="text-control" id="insert-radio">radio</a>
+	  <a class="text-control" id="insert-blank">blank</a>
+	  <a class="text-control" id="insert-solution-block">solution line</a>
+	  <a class="text-control" id="insert-table">table</a>
+	</p>		
+	<textarea id="text"># X Basic Instructions and Info
 
 Press clear above to zap this content.	  
 	  
@@ -66,5 +76,26 @@ have a background of blue. {: style="background-color: blue" :}
       </div>
     </div>
     <script src="dingus.js"></script>
+<div id="error-dialog" title="Error">
+	<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+</div>
+<div id="level-dialog" title="Set Question Level">
+  <p>Set the level of the question tag.  The default is level 1, the top level.</p>
+  <input type="text" name="level" value="1" />
+</div>
+<div id="table-dialog" title="Set Table Columns and Seperator String">
+  <form>
+    <fieldset>
+      <p>
+	<input type="input" id="table_cols" name="cols" value="3">
+	<label for="table_cols">Number of Columns</label>
+      </p>
+      <p>
+	<input type="input" id="table_sepr" name="sepr" value="|">
+	<label for="table_sepr">Column Seperator</label>
+      </p>
+    </fieldset>
+  </form>
+</div>
 </body>
 </html>
