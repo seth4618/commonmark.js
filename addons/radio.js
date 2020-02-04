@@ -33,7 +33,7 @@ const blockfuncs =  {
         }
     },
     finalize: function() { return; },
-    canContain: function(t) { return ((t === 'paragraph')||(t === 'answer')); },
+    canContain: function(t) { return true; }, //((t === 'paragraph')||(t === 'answer')); },
     acceptsLines: false
 };
 
