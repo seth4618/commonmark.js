@@ -38,7 +38,7 @@ var usage = function() {
     process.stdout.write("commonmark [options] [file..]\n\n" +
     "Convert CommonMark to HTML.  Files are concatenated before\n" +
     "parsing.  If no files are given, input is read from stdin.\n\n" +
-    "-t,--to FORMAT  Specify output format (xml, html, ast)\n" +
+    "-t,--to FORMAT  Specify output format (xml, html, ast, exam)\n" +
     "--time          Produce timings for phases of parsing and rendering\n" +
     "--smart         Parse 'smart' punctuation\n" +
     "--tree          output parse tree\n" +
