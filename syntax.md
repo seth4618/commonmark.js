@@ -1,4 +1,4 @@
-# New additions
+# New additions in the addons directory
 
 {toc}
 
@@ -11,11 +11,26 @@ header nodes, e.g., nodes starting with #...) to be inserted up to
 `depth`.  If no `:depth` is included (e.g., `{toc}`), then there is no
 maximum depth.
 
+### include other files
+
+### tables
+
+### attributes, e.g., CSS
+
 ## New Inlines:
 
-### {question}: to insert a number for a question
+### `{question}`: to insert a number for a question
 
 `{question:depth}` will insert a question number, where depth will
 determine which level of the number is increased.  If no `:depth` is
 included, then it will increment the top-level question number.
+
+### Local Names for links within a document
+
+## Other exam question stuff
+
+- `{radio:begin}`
+- `{answer:a}`
+
+
 
