@@ -2,6 +2,14 @@
 
 {toc}
 
+## Using commonmark (as in addons branch)
+
+The below will parse `exam-source-file.md` and generate `exam-source-file.html` and `exam-source-file.exam` in `/tmp`
+
+```
+bin/commonmark -t exam --outdir /tmp --nostdout exam-source-file.md
+```
+
 ## New blocks:
 
 ### {toc}: for table of contents (done)
