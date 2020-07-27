@@ -39,8 +39,7 @@ var render = function(parsed) {
     var result = writer.render(parsed);
     var endTime = new Date().getTime();
     var renderTime = endTime - startTime;
-    var preview = $("#preview iframe").contents().find('body');
-    preview.get(0).innerHTML = result;
+    var preview = $("#preview iframe").contents().find('body').html(result);
     $("#rendertime").text(renderTime);
     //var asstr = parsed.asstring(false);
     //$('#tree').empty().append($('<div>'+asstr+'</div>'));
@@ -173,10 +172,13 @@ function insertTable() {
     $('#table-dialog').dialog("open");
 }
 
-$(document).ready(function() {
-  $('iframe').on('load', function() {
-      var textarea = $("#text");
-      $editor = textarea;
+function initRenderer()
+{
+    $("#preview iframe").contents().find('head').html('<link href="bootstrap.min.css" rel="stylesheet"><link href="dingus.css" rel="stylesheet">');
+
+
+    var textarea = $("#text");
+    $editor = textarea;
     var initial_text = getQueryVariable("text");
     var smartSelected = getQueryVariable("smart") === "1";
     $("#smart").prop('checked', smartSelected);
@@ -192,12 +194,12 @@ $(document).ready(function() {
         parseAndRender();
     });
 
-      $('#insert-question').click(insertQuestion);
-      $('#insert-radio').click(insertRadio);
-      $('#insert-blank').click(insertBlank);
-      $('#insert-solution-block').click(insertSolutionBlock);
-      $('#insert-table').click(insertTable);
-      
+    $('#insert-question').click(insertQuestion);
+    $('#insert-radio').click(insertRadio);
+    $('#insert-blank').click(insertBlank);
+    $('#insert-solution-block').click(insertSolutionBlock);
+    $('#insert-table').click(insertTable);
+    
 
     textarea.bind('input propertychange',
                   _.debounce(parseAndRender, 50, { maxWait: 100 }));
@@ -210,8 +212,16 @@ $(document).ready(function() {
         reader.options.smart = false;
         parseAndRender();
     });
-  });
+}
 
+
+$(document).ready(function() {
+    const iframe = $('#preview iframe')[0];
+    iframe.contentWindow.document.open();
+    iframe.contentWindow.document.write('<head>  <meta charset="utf-8">  <title>commonmark.js preview</title>  <link href="bootstrap.min.css" rel="stylesheet">  <link href="dingus.css" rel="stylesheet">  <style>    body { margin: 0; padding: 0; }    .selected { background-color: #eeeeee; }  </style></head><body><div>filler</div></body>');
+    iframe.contentWindow.document.close();
+    initRenderer();
+    
     $('#error-dialog').dialog({
 	autoOpen: false,
 	width: 400,
